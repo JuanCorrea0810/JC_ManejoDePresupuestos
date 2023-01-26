@@ -1,0 +1,18 @@
+﻿@using ManejoDePresupuestos.Utilidades.Administracion_DTOs;
+@model ForgetPassword
+@{
+    ViewData["Title"]= "Recuperar Cuenta";
+}
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<form class="IniciarSesion" asp-controller="Registro" asp-action="OlvidoContraseña" method="post">
+    <h3 class="justify-content-center text-center mt-3">Ingresa el Email de la cuenta que quiera recuperar</h3>
+    <label asp-for="Email"></label>
+    <input type="email" asp-for="Email" required>
+    <span asp-validation-for="Email" class="text-danger"></span>
+    <input type="submit" value="Recuperar mi cuenta">
+</form>
+
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

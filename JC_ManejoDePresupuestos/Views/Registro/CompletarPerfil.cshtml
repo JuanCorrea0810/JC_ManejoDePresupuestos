@@ -1,0 +1,90 @@
+﻿@using ManejoDePresupuestos.Utilidades.Administracion_DTOs;
+@using ManejoDePresupuestos.Utilidades.Countries;
+@using System.Text.Json;
+@model PutUsersDTO
+@{
+    ViewData["Title"] = "Completar perfil";
+    var ListadoDePaises = Countries.ListCountries;
+    string paisesJson = JsonSerializer.Serialize(ListadoDePaises);
+}
+
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+<form id="CompletarPerfil" class="mt-5" asp-controller="Registro" asp-action="CompletarPerfil">
+    <div class="form-group">
+        <label asp-for="Dni"></label>
+        <input type="text" pattern="[0-9]*" title="Solo se permiten números" class="form-control" asp-for="Dni" required>
+        <span asp-validation-for="Dni" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="FirstName"></label>
+        <input type="text" class="form-control" asp-for="FirstName" required>
+        <span asp-validation-for="FirstName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="SecondName"></label>
+        <input type="text" class="form-control" asp-for="SecondName">
+        <span asp-validation-for="SecondName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="FirstSurName"></label>
+        <input type="text" class="form-control" asp-for="FirstSurName" required>
+        <span asp-validation-for="FirstSurName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="SecondSurName"></label>
+        <input type="text" class="form-control" asp-for="SecondSurName">
+        <span asp-validation-for="SecondSurName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Age"></label>
+        <input type="number" class="form-control" asp-for="Age">
+        <span asp-validation-for="Age" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Country"></label>
+        <select id="pais-select" class="form-control" asp-for="Country"> 
+            @if (Model.Country.Length == 0)
+            {
+                <option value="" selected></option>
+                
+            }else
+            {
+                <option value="@Model.Country" selected></option>
+            }
+        </select>
+        <span asp-validation-for="Country" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Address"></label>
+        <input type="text" class="form-control" asp-for="Address">
+        <span asp-validation-for="Address" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="PhoneNumber"></label>
+        <input type="text" class="form-control" asp-for="PhoneNumber">
+        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Enviar Datos</button>
+</form>
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}
+<script>
+    window.addEventListener("load", function () {
+        var paises = JSON.parse('@Html.Raw(paisesJson)');
+        var select = document.getElementById("pais-select");
+
+        for (var i = 0; i < paises.length; i++) {
+            var opt = paises[i];
+            var el = document.createElement("option");
+            el.textContent = opt;
+            el.value = opt;
+            select.appendChild(el);
+        }
+    });
+    
+</script>
+
+

@@ -1,0 +1,146 @@
+﻿
+#CrearCuenta {
+    width: 50%;
+    border: 1px solid #ccc;
+    border-radius: 0.25em;
+    padding: 1em;
+    margin: 0 auto;
+    justify-content: center;
+    display: flow
+}
+
+    #CrearCuenta .form-group {
+        margin-bottom: 1em;
+    }
+
+    #CrearCuenta label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 0.5em;
+    }
+
+    #CrearCuenta input[type="email"], #CrearCuenta input[type="password"] {
+        padding: 0.5em;
+        border: 1px solid #ccc;
+        border-radius: 0.25em;
+        width: 100%;
+    }
+
+    #CrearCuenta button[type="submit"] {
+        background: #E50914;
+        color: #fff;
+        padding: 0.5em 1em;
+        border: none;
+        border-radius: 0.25em;
+        cursor: pointer;
+        width: 100%
+    }
+
+.ConfirmarEmail {
+    text-align: center;
+    margin: 100px auto;
+    width: 80%;
+}
+
+#TituloConfirmarEmail {
+    color: green;
+    font-size: 2.5em;
+    margin-bottom: 50px;
+}
+
+#ButtonConfirmEmail {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: green;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 1.2em;
+    margin-top: 50px;
+}
+
+    #ButtonConfirmEmail:hover {
+        background-color: darkgreen;
+    }
+
+.IniciarSesion {
+    width: 400px;
+    margin: 0 auto;
+    text-align: left;
+    margin-top: 5%;
+    border: double lightgray;
+    padding: 80px 30px;
+}
+
+    .IniciarSesion label {
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .IniciarSesion input[type="email"], .IniciarSesion
+    input[type="password"] {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        box-sizing: border-box;
+        border: 2px solid #ccc;
+        border-radius: 4px;
+    }
+
+    .IniciarSesion input[type="submit"] {
+        width: 100%;
+        background-color: #4CAF50;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+        .IniciarSesion input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+
+#CompletarPerfil {
+    width: 50%;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+    #CompletarPerfil label {
+        width: 100%;
+        display: block;
+        margin-bottom: 10px;
+        font-size: 18px;
+    }
+
+#CompletarPerfil input[type="text"] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#CompletarPerfil input[type="submit"] {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#CompletarPerfil input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+
+

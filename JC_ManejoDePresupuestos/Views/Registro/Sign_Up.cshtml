@@ -1,0 +1,31 @@
+﻿
+@model InfoUser
+@{
+    ViewData["Title"] = "Crear Cuenta";
+}
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+<form id="CrearCuenta" class="mt-5" asp-controller="Registro" asp-action="Sign_Up">
+    <div class="form-group">
+        <label asp-for="Email"></label>
+        <input type="email" class="form-control" asp-for ="Email"required>
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Password"></label>
+        <input type="password" class="form-control" asp-for="Password" required>
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ConfirmPassword"></label>
+        <input type="password" class="form-control" asp-for="ConfirmPassword" required>
+        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Crear Cuenta</button>
+</form>
+<p class="justify-content-center text-center mt-3">¿Ya tienes una cuenta? <a href="/Registro/LogIn">Iniciar sesión</a></p>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}
+

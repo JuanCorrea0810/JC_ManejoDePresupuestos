@@ -1,0 +1,31 @@
+﻿@using ManejoDePresupuestos.Utilidades.Administracion_DTOs;
+@model ResetPassword
+@{
+    ViewData["Title"]= "Reset Contraseña";
+}
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+<form id="CrearCuenta" class="mt-5" asp-controller="Registro" asp-action="ResetearContraseña">
+    <div class="form-group">
+        <label asp-for="Email"></label>
+        <input type="email" class="form-control" asp-for="Email" required>
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="NewPassword"></label>
+        <input type="password" class="form-control" asp-for="NewPassword" required>
+        <span asp-validation-for="NewPassword" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ConfirmPassword"></label>
+        <input type="password" class="form-control" asp-for="ConfirmPassword" required>
+        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+    </div>
+    <input type="hidden" asp-for="Code" value="@ViewBag.Code">
+    <button type="submit" class="btn btn-primary">Cambiar Contraseña</button>
+</form>
+
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}
