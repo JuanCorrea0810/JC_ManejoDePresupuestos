@@ -4,6 +4,7 @@
 
 }
 <h3 class="mb-3">¿Está seguro que desea borrar el tipo cuenta @Model.Nombre?</h3>
+<h5 class="text-danger">Todas las cuentas individuales que estén asociadas a este tipo de cuentas se eliminarán</h5>
 
 <form asp-action="BorrarTipoCuenta" method="post">
     <input type="hidden" asp-for="Id" />

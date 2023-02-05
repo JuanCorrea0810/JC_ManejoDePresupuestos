@@ -11,6 +11,8 @@ namespace ManejoDePresupuestos.Utilidades
             CreateMap<TipoCuentaViewModel, TipoCuenta>();
             CreateMap<TipoCuenta,MostrarTipoCuentaViewModel>().ReverseMap();
             CreateMap<PutUsersDTO, NewIdentityUser>().ReverseMap();
+            CreateMap<CuentaViewModel, Cuenta>();
+            CreateMap<Cuenta, MostrarCuentaViewModel>().ForMember(x=> x.TipoCuenta , z=> z.MapFrom(o=> o.TipoCuentas.Nombre)).ReverseMap();
             
         }
     }

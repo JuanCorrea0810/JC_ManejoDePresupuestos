@@ -54,6 +54,7 @@ public class Program
         builder.Services.AddAutoMapper(typeof(Program));
 
         builder.Services.AddScoped<IRepositorioTipoCuentas, RepositorioTipoCuentas>();
+        builder.Services.AddScoped<IRepositorioCuentas, RepositorioCuentas>();
         builder.Services.AddTransient<IGetUserInfo, GetUserInfo>();
         builder.Services.AddTransient<IServicioEmail, ServicioEmailElasticEmail>();
 
