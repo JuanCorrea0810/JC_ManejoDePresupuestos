@@ -46,6 +46,7 @@ namespace ManejoDePresupuestos.Controllers
         [HttpGet]
         public ActionResult Sign_Up()
         {
+            
             return View();
         }
 
@@ -54,6 +55,7 @@ namespace ManejoDePresupuestos.Controllers
         [HttpPost]
         public async Task<ActionResult> Sign_Up(InfoUser credentials)
         {
+            
             if (ModelState.IsValid)
             {
                 var User = new NewIdentityUser { UserName = credentials.Email, Email = credentials.Email };
@@ -84,16 +86,20 @@ namespace ManejoDePresupuestos.Controllers
         }
         [AllowAnonymous]
         [HttpGet]
-        public ActionResult LogIn()
+        public ActionResult LogIn(string ReturnUrl = null)
         {
+            ViewData["ReturnUrl"] = ReturnUrl;
+            ReturnUrl = ReturnUrl ?? Url.Content("~/");
             return View();
         }
 
         [AllowAnonymous]
         [HttpPost]
 
-        public async Task<ActionResult> LogIn(LoginAuth credentials)
+        public async Task<ActionResult> LogIn(LoginAuth credentials, string ReturnUrl = null)
         {
+            ViewData["ReturnUrl"] = ReturnUrl;
+            ReturnUrl = ReturnUrl ?? Url.Content("~/");
             if (ModelState.IsValid)
             {
                 var result = await signInManager.PasswordSignInAsync(credentials.Email, credentials.Password, credentials.RememberMe,
@@ -114,7 +120,7 @@ namespace ManejoDePresupuestos.Controllers
                 if (result.Succeeded)
                 {
                     await signInManager.SignInAsync(user, isPersistent: credentials.RememberMe);
-                    return RedirectToAction("Index", "Home");
+                    return LocalRedirect(ReturnUrl);
                 }
                 else
                 {

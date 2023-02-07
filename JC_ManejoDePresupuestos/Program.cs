@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Text.Encodings.Web;
 
 public class Program
 {
@@ -75,9 +76,20 @@ public class Program
              options.Cookie.Expiration = TimeSpan.FromDays(15);
              options.Events = new CookieAuthenticationEvents
              {
-                 OnValidatePrincipal = SecurityStampValidator.ValidatePrincipalAsync
+                 OnValidatePrincipal = SecurityStampValidator.ValidatePrincipalAsync,
+                 OnRedirectToLogin = ctx =>
+                 {
+                     ctx.Response.Redirect("/Registro/LogIn?ReturnUrl=" +
+                         UrlEncoder.Default.Encode(ctx.Request.Path));
+                     return Task.CompletedTask;
+                 }
              };
          }); ;
+
+        builder.Services.ConfigureApplicationCookie(options =>
+        {
+            options.LoginPath = new PathString("/Registro/LogIn");         
+        });
 
         builder.Services.AddAuthorization();
         

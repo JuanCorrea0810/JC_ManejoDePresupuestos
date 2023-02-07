@@ -4,7 +4,7 @@
     ViewData["Title"] = "Iniciar Sesión";
 }
 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-<form class="IniciarSesion" asp-controller="Registro" asp-action="LogIn" method="post">
+<form class="IniciarSesion" asp-controller="Registro" asp-action="LogIn" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
     <label asp-for="Email"></label>
     <input type="email" asp-for="Email" required>
     <span asp-validation-for="Email" class="text-danger"></span>

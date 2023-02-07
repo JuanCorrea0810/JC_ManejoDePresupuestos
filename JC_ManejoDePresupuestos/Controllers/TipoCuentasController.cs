@@ -32,6 +32,7 @@ namespace ManejoDePresupuestos.Controllers
       
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Crear(TipoCuentaViewModel ViewModel)
         {
             if (!ModelState.IsValid)
@@ -61,6 +62,7 @@ namespace ManejoDePresupuestos.Controllers
             return View(TipoCuenta);
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Editar(int Id,string Nombre)
         {
             var UsuarioId = await getUserInfo.GetId();
@@ -84,6 +86,7 @@ namespace ManejoDePresupuestos.Controllers
             return View(TipoCuenta);
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> BorrarTipoCuenta(int Id)
         {
             var UsuarioId = await getUserInfo.GetId();
@@ -97,6 +100,7 @@ namespace ManejoDePresupuestos.Controllers
             
         }
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> VerificarExisteNombreJS(string nombre)
         {
             var UsuarioId = await getUserInfo.GetId();
