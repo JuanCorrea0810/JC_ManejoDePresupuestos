@@ -56,6 +56,7 @@ public class Program
 
         builder.Services.AddScoped<IRepositorioTipoCuentas, RepositorioTipoCuentas>();
         builder.Services.AddScoped<IRepositorioCuentas, RepositorioCuentas>();
+        builder.Services.AddScoped<IRepositorioCategorias,RepositorioCategorias>();
         builder.Services.AddTransient<IGetUserInfo, GetUserInfo>();
         builder.Services.AddTransient<IServicioEmail, ServicioEmailElasticEmail>();
 

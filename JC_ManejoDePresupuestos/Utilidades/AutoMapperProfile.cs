@@ -14,6 +14,7 @@ namespace ManejoDePresupuestos.Utilidades
             CreateMap<CuentaViewModel, Cuenta>().ReverseMap();
             CreateMap<Cuenta, MostrarCuentaViewModel>().ForMember(x=> x.TipoCuenta , z=> z.MapFrom(o=> o.TipoCuentas.Nombre)).ReverseMap();
             CreateMap<CuentaViewModel, CuentaCreacionViewModel>();
+            CreateMap<CategoríaViewModel,Categoria>().ReverseMap();
 
         }
     }
