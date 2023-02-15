@@ -11,5 +11,4 @@ public partial class TipoOperacion
 
     public virtual ICollection<Categoria> Categoria { get; } 
 
-    public virtual ICollection<Transaccion> Transacciones { get; } 
 }

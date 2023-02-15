@@ -10,6 +10,7 @@ namespace ManejoDePresupuestos.Servicios
         Task Borrar(int Id, string UsuarioId);
         Task Crear(CategoríaViewModel categoríaViewModel, string UsuarioId);
         Task<IEnumerable<CategoríaViewModel>> ObtenerListado(string UsuarioId);
+        Task<IEnumerable<CategoríaViewModel>> ObtenerListado(string UsuarioId, TipoOperacionViewModel TipoOperacionId);
         Task<CategoríaViewModel> ObtenerPorId(int Id, string UsuarioId);
     }
     public class RepositorioCategorias : IRepositorioCategorias
@@ -33,6 +34,11 @@ namespace ManejoDePresupuestos.Servicios
         public async Task<IEnumerable<CategoríaViewModel>> ObtenerListado(string UsuarioId)
         {
             var Listado = await context.Categorias.Where(x => x.UsuarioId == UsuarioId).ToListAsync();
+            return mapper.Map<List<CategoríaViewModel>>(Listado);
+        }
+        public async Task<IEnumerable<CategoríaViewModel>> ObtenerListado(string UsuarioId, TipoOperacionViewModel TipoOperacionId)
+        {
+            var Listado = await context.Categorias.Where(x => x.UsuarioId == UsuarioId && x.TipoOperacionId == ((int)TipoOperacionId)).ToListAsync();
             return mapper.Map<List<CategoríaViewModel>>(Listado);
         }
         public async Task<CategoríaViewModel> ObtenerPorId(int Id, string UsuarioId)

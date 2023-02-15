@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Utilidades\Auth\**" />
+    <Content Remove="Utilidades\Auth\**" />
+    <EmbeddedResource Remove="Utilidades\Auth\**" />
+    <None Remove="Utilidades\Auth\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
 
@@ -37,10 +44,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Utilidades\Auth\" />
   </ItemGroup>
 
 </Project>

@@ -15,19 +15,15 @@ public partial class Transaccion
 
     public string Nota { get; set; }
 
-    public int TipoOperacionId { get; set; }
-
     public int CuentaId { get; set; }
 
     public int CategoriaId { get; set; }
-
+    
     public string UsuarioId { get; set; }
 
     public virtual Categoria Categoria { get; set; }
 
     public virtual Cuenta Cuenta { get; set; }
-
-    public virtual TipoOperacion TipoOperacion { get; set; }
 
     public virtual NewIdentityUser Usuario { get; set; }
 }
