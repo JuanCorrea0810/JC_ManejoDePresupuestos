@@ -13,16 +13,21 @@ namespace ManejoDePresupuestos.Controllers
     {
         private readonly IRepositorioTipoCuentas repositorioTipoCuentas;
         private readonly IRepositorioCuentas repositorioCuentas;
+        private readonly IRepositorioTransacciones repositorioTransacciones;
         private readonly IGetUserInfo getUserInfo;
-        
+        private readonly IServicioReporteTransacciones reporteTransacciones;
 
         public CuentasController(IRepositorioTipoCuentas repositorioTipoCuentas, 
-            IRepositorioCuentas repositorioCuentas, 
-            IGetUserInfo getUserInfo)
+            IRepositorioCuentas repositorioCuentas,
+            IRepositorioTransacciones repositorioTransacciones,
+            IGetUserInfo getUserInfo,
+            IServicioReporteTransacciones reporteTransacciones)
         {
             this.repositorioTipoCuentas = repositorioTipoCuentas;
             this.repositorioCuentas = repositorioCuentas;
+            this.repositorioTransacciones = repositorioTransacciones;
             this.getUserInfo = getUserInfo;
+            this.reporteTransacciones = reporteTransacciones;
         }
         [HttpGet]
         public async Task<ActionResult> Index() 
@@ -142,6 +147,23 @@ namespace ManejoDePresupuestos.Controllers
             await repositorioCuentas.Borrar(Id, UsuarioId);
             return RedirectToAction("Index");
         }
+        [HttpGet]
+        public async Task<ActionResult> Reporte(int Id,int month,int year) 
+        {
+            var UsuarioId = await getUserInfo.GetId();
+            var Cuenta = await repositorioCuentas.ObtenerPorId(Id, UsuarioId);
+            if (Cuenta is null)
+            {
+                return View("ErrorGenerico");
+            }
+
+            ViewBag.Cuenta = Cuenta.Nombre;
+            ReportesTransacciones modelo = await reporteTransacciones.ReportePorCuentas(month, year,Id,UsuarioId,ViewBag);
+
+            return View(modelo);
+
+        }
+        
         private async Task<IEnumerable<MostrarTipoCuentaViewModel>> ObtenerListadoTipoCuentas(string UsuarioId) 
         {
             return await repositorioTipoCuentas.ObtenerListado(UsuarioId);
@@ -149,7 +171,7 @@ namespace ManejoDePresupuestos.Controllers
         private CuentaCreacionViewModel PrepararModelo(IEnumerable<MostrarTipoCuentaViewModel> tiposCuentas) 
         {
             var modelo = new CuentaCreacionViewModel();
-            if (tiposCuentas.Count() > 0) 
+            if (tiposCuentas.Any()) 
             {
                 modelo.TiposCuentas = tiposCuentas.Select(x => new SelectListItem(x.Nombre, x.Id.ToString()));
                 return modelo;

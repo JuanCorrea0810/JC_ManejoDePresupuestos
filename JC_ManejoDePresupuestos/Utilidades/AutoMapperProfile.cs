@@ -16,10 +16,14 @@ namespace ManejoDePresupuestos.Utilidades
             CreateMap<CuentaViewModel, CuentaCreacionViewModel>();
             CreateMap<CategoríaViewModel,Categoria>().ReverseMap();
             CreateMap<TransaccionViewModel, Transaccion>().ReverseMap();
-            CreateMap<Transaccion, TransaccionCreacionViewModel>().ForMember(x=> x.TipoOperacionId , z=> z.MapFrom(o=> o.Categoria.TipoOperacionId)).ReverseMap();
+            CreateMap<Transaccion, TransaccionCreacionViewModel>().ForMember(x=> x.TipoOperacionId , z=> z.MapFrom(o=> o.Categoria.TipoOperacionId))
+                                                                  .ForMember(x=> x.Cuenta,z=> z.MapFrom(o=> o.Cuenta.Nombre))
+                                                                  .ForMember(x=> x.Categoria,z=> z.MapFrom(o=> o.Categoria.Nombre)).ReverseMap();
+            
             CreateMap<TransaccionCreacionViewModel,ActualizarTransaccionViewModel>().ForMember(x=> x.CuentaAnteriorId,z=>z.MapFrom(o=> o.CuentaId))
                                                                                     .ForMember(x=> x.MontoAnterior, z=>z.MapFrom(o=> o.Monto));
             CreateMap<ActualizarTransaccionViewModel, Transaccion>();
+       
 
         }
     }

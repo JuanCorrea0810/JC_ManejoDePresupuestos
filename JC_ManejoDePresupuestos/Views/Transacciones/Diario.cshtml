@@ -1,0 +1,19 @@
+﻿@model ReportesTransacciones
+@{
+    ViewData["Title"] = "Reporte Diario";
+}
+<partial name="_Submenu" Model="SubMenuTransacciones.Diario" />
+
+<div class="mb-3">
+    <a asp-action="Crear" class="btn btn-primary">Crear una nueva transacción</a>
+</div>
+<h4>
+    <a asp-action="Diario" asp-controller="Transacciones" asp-route-month="@ViewBag.mesAnterior" asp-route-year="@ViewBag.añoAnterior"
+       class="btn btn-secondary"><i class="bi-chevron-left"></i></a>
+@Model.FechaInicio.ToString("MMM").Replace(".","").ToUpper() - @Model.FechaInicio.Year
+    <a asp-action="Diario" asp-controller="Transacciones" asp-route-month="@ViewBag.mesPosterior" asp-route-year="@ViewBag.añoPosterior"
+       class="btn btn-secondary"><i class="bi-chevron-right"></i></a>
+</h4>
+<partial name="_MostrarTransaccionesAgrupadas" model="@Model"/>
+
+

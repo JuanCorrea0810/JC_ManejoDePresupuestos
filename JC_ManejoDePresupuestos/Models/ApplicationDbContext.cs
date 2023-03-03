@@ -27,6 +27,9 @@ public partial class ApplicationDbContext : IdentityDbContext<NewIdentityUser>
     public virtual DbSet<TipoOperacion> TiposOperaciones { get; set; }
 
     public virtual DbSet<Transaccion> Transacciones { get; set; }
+    public virtual DbSet<TransaccionesSemanalesViewModel> TransaccionesPorSemana { get; set; }
+
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -37,6 +40,8 @@ public partial class ApplicationDbContext : IdentityDbContext<NewIdentityUser>
         modelBuilder.Entity<Cuenta>()
             .Property(p => p.Balance)
             .HasColumnType("decimal(18,2)");
+        
+        modelBuilder.Entity<TransaccionesSemanalesViewModel>().HasNoKey();
         base.OnModelCreating(modelBuilder);
     }
 

@@ -1,0 +1,71 @@
+﻿@model ReportesTransacciones
+@{
+    string ObtenerClaseBalance(decimal balance)
+    {
+        return balance >= 0 ? "activo" : "pasivo";
+
+    }
+}
+@if (!Model.TransaccionesAgrupadas.Any())
+{
+    <h5>No hay datos para mostrar</h5>
+}
+else
+{
+    <h3 style="margin-left:25%" class="mb-5 mt-5">Este es el balance de las transacciones agrupadas por día</h3>
+    <table class="table">
+        <tbody>
+            @foreach (var transaccionAgrupada in Model.TransaccionesAgrupadas)
+            {
+                <tr style="background-color: lightblue; font-size: 26px">
+                    <td colspan="3">
+                        @transaccionAgrupada.FechaTransaccion.Day
+                        <span class="badge bg-secondary">
+                            @transaccionAgrupada.FechaTransaccion.ToString("ddd").ToUpper().Replace(".","")
+                        </span>
+                    </td>
+                    <td class="activo">@transaccionAgrupada.BalanceDepositos.ToString("N")</td>
+                    <td class="pasivo">@transaccionAgrupada.BalanceRetiros.ToString("N")</td>
+                    <td>
+                        <span style="color:mediumslateblue; margin-right:5%">
+                            Total:
+                        </span>
+                        <span class="@ObtenerClaseBalance(transaccionAgrupada.Total)">
+                            @transaccionAgrupada.Total.ToString("N")
+                        </span>
+                    </td>
+                </tr>
+                @foreach (var transaccion in transaccionAgrupada.Transacciones)
+                {
+                    <tr style="vertical-align: middle">
+                        <td>
+                            <a asp-controller="Transacciones" asp-action="Editar"
+                   asp-route-id="@transaccion.Id" asp-route-urlRetorno="@ViewBag.urlRetorno">
+                                <i class="bi-pencil"></i>
+                            </a>
+                        </td>
+                        <td>@transaccion.Categoria</td>
+                        @if (@transaccion.Nota.Length >= 60)
+                        {
+                            var SubString = transaccion.Nota.Substring(0, 60) + "...";
+                            <td>@SubString</td>
+                        }
+                        else
+                        {
+                            <td>@transaccion.Nota</td>
+                        }
+                        <td class="activo">
+                            @(transaccion.TipoOperacionId == TipoOperacionViewModel.Ingreso
+                                ? transaccion.Monto.ToString("N") : null)
+                        </td>
+                        <td class="pasivo">
+                            @(transaccion.TipoOperacionId == TipoOperacionViewModel.Gasto
+                                ? transaccion.Monto.ToString("N") : null)
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+}

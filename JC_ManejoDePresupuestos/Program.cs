@@ -60,6 +60,8 @@ public class Program
         builder.Services.AddScoped<IRepositorioTransacciones, RepositorioTransacciones>();
         builder.Services.AddTransient<IGetUserInfo, GetUserInfo>();
         builder.Services.AddTransient<IServicioEmail, ServicioEmailElasticEmail>();
+        builder.Services.AddTransient<IServicioReporteTransacciones, ServicioReporteTransacciones>();
+        builder.Services.AddHttpContextAccessor();
 
 
 
@@ -116,7 +118,7 @@ public class Program
         
         app.MapControllerRoute(
             name: "default",
-            pattern: "{controller=Home}/{action=Index}/{id?}");
+            pattern: "{controller=Cuentas}/{action=Index}/{id?}");
         app.Run();
     }
 }

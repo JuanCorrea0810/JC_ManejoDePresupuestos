@@ -12,8 +12,10 @@ namespace ManejoDePresupuestos.Servicios
         Task Borrar(int Id, string UsuarioId);
         Task Crear(TransaccionCreacionViewModel transaccionViewModel, string UsuarioId);
         ActualizarTransaccionViewModel MapearAModeloDeActualizacion(TransaccionCreacionViewModel transaccion);
-        Task<IEnumerable<TransaccionViewModel>> ObtenerListado(string UsuarioId);
+        Task<IEnumerable<TransaccionCreacionViewModel>> ObtenerListado(string UsuarioId, DateTime fechaInicio, DateTime fechaFin);
+        Task<IEnumerable<TransaccionCreacionViewModel>> ObtenerPorCuentas(TransaccionesPorCuenta viewModel, string UsuarioId);
         Task<TransaccionCreacionViewModel> ObtenerPorId(int Id, string UsuarioId);
+        Task<IEnumerable<TransaccionesSemanalesViewModel>> ObtenerTransaccionesPorSemana(string UsuarioId, DateTime FechaInicio, DateTime FechaFin);
     }
     public class RepositorioTransacciones : IRepositorioTransacciones
     {
@@ -25,10 +27,14 @@ namespace ManejoDePresupuestos.Servicios
             this.context = context;
             this.mapper = mapper;
         }
-        public async Task<IEnumerable<TransaccionViewModel>> ObtenerListado(string UsuarioId)
+        public async Task<IEnumerable<TransaccionCreacionViewModel>> ObtenerListado(string UsuarioId,DateTime fechaInicio, DateTime fechaFin)
         {
-            var Listado = await context.Transacciones.Where(x => x.UsuarioId == UsuarioId).ToListAsync();
-            return mapper.Map<List<TransaccionViewModel>>(Listado);
+            var Transacciones = await context.Transacciones.Include(x => x.Categoria)
+                                                           .Include(x => x.Cuenta)
+                                                           .Where(x => x.UsuarioId == UsuarioId && (x.FechaTransaccion >= fechaInicio && x.FechaTransaccion <= fechaFin))
+                                                           .OrderByDescending(x=> x.FechaTransaccion)
+                                                           .ToListAsync();
+            return mapper.Map<List<TransaccionCreacionViewModel>>(Transacciones);
         }
 
         public async Task Crear(TransaccionCreacionViewModel transaccionViewModel, string UsuarioId)
@@ -44,9 +50,6 @@ namespace ManejoDePresupuestos.Servicios
             };
             
             await context.Database.ExecuteSqlRawAsync("EXEC CrearTransaccion @UsuarioId, @FechaTransaccion, @Monto, @CategoriaId, @CuentaId, @Nota", parameters);
-
-         
-
         }
 
         public async Task Actualizar(ActualizarTransaccionViewModel transaccionViewModel, string UsuarioId)
@@ -79,10 +82,32 @@ namespace ManejoDePresupuestos.Servicios
             context.Remove(Transaccion);
             await context.SaveChangesAsync();
         }
+        public async Task<IEnumerable<TransaccionCreacionViewModel>> ObtenerPorCuentas(TransaccionesPorCuenta viewModel,string UsuarioId) 
+        {
+            var Transacciones = await context.Transacciones.Include(x => x.Categoria)
+                                                           .Include(x => x.Cuenta)
+                                                           .Where(x => x.UsuarioId == UsuarioId && x.CuentaId == viewModel.CuentaId && (x.FechaTransaccion >= viewModel.FechaInicio && x.FechaTransaccion <= viewModel.FechaFin)).ToListAsync();
+            return mapper.Map<List<TransaccionCreacionViewModel>>(Transacciones);
+
+        }
 
         public ActualizarTransaccionViewModel MapearAModeloDeActualizacion(TransaccionCreacionViewModel transaccion) 
         {
             return mapper.Map<ActualizarTransaccionViewModel>(transaccion);
         }
+        public async Task<IEnumerable<TransaccionesSemanalesViewModel>> ObtenerTransaccionesPorSemana(string UsuarioId, DateTime FechaInicio, DateTime FechaFin)
+        {
+
+            var parameters = new List<SqlParameter>()
+            {
+                 new SqlParameter("@UsuarioId", UsuarioId),
+                 new SqlParameter("@FechaInicio", FechaInicio),
+                 new SqlParameter("@FechaFin", FechaFin)
+            };
+            var resultado = await context.TransaccionesPorSemana.FromSqlRaw("EXEC ReporteSemanal @UsuarioId,@FechaInicio,@FechaFin", parameters.ToArray()).
+                ToListAsync();
+            return resultado;
+        }
+
     }
 }

@@ -1,6 +1,10 @@
 ﻿@model CuentaCreacionViewModel
 @{
     ViewData["Title"] = "Editar Cuenta";
+    int ParsearBalance(decimal balance)
+    {
+        return (int)balance;
+    }
 }
 <h1>Editar Cuenta: @Model.Nombre</h1>
 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -19,7 +23,7 @@
     </div>
     <div class="mb-3 mt-3">
         <label asp-for="Balance" class="form-label"></label>
-        <input id ="Balance"  asp-for="Balance" class="form-control" />
+        <input id="Balance" asp-for="Balance" class="form-control" value="@ParsearBalance(Model.Balance)" />
         <span asp-validation-for="Balance" class="text-danger"></span>
     </div>
     <div class="mb-3">

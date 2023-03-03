@@ -56,25 +56,26 @@ namespace ManejoDePresupuestos.Controllers
         public async Task<ActionResult> Sign_Up(InfoUser credentials)
         {
             
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var User = new NewIdentityUser { UserName = credentials.Email, Email = credentials.Email };
-                var result = await userManager.CreateAsync(User, credentials.Password);
-                if (result.Succeeded)
-                {
-                    //Se agrega el usuario al rol User y se le agregan Claims para que sea más fácil identificarlo
-                    await userManager.AddToRoleAsync(User, "User");
-                    await userManager.AddClaimAsync(User, new Claim(ClaimTypes.Role, "User"));
-
-                    //Implementación de confirmación de email en el registro
-                    var code = await userManager.GenerateEmailConfirmationTokenAsync(User);
-                    var urlRetorno = Url.Action("ConfirmarEmail", "Registro", new { IdUser = User.Id, code = code }, protocol: HttpContext.Request.Scheme);
-                    await servicioEmail.ConfirmarCuenta(credentials.Email, urlRetorno);
-
-                    return RedirectToAction("GraciasPorCrearCuenta", "Registro", new { email = credentials.Email });
-                }
-                ValidarErrores(result);
+                return View(credentials);
             }
+            var User = new NewIdentityUser { UserName = credentials.Email, Email = credentials.Email };
+            var result = await userManager.CreateAsync(User, credentials.Password);
+            if (result.Succeeded)
+            {
+                //Se agrega el usuario al rol User y se le agregan Claims para que sea más fácil identificarlo
+                await userManager.AddToRoleAsync(User, "User");
+                await userManager.AddClaimAsync(User, new Claim(ClaimTypes.Role, "User"));
+
+                //Implementación de confirmación de email en el registro
+                var code = await userManager.GenerateEmailConfirmationTokenAsync(User);
+                var urlRetorno = Url.Action("ConfirmarEmail", "Registro", new { IdUser = User.Id, code = code }, protocol: HttpContext.Request.Scheme);
+                await servicioEmail.ConfirmarCuenta(credentials.Email, urlRetorno);
+
+                return RedirectToAction("GraciasPorCrearCuenta", "Registro", new { email = credentials.Email });
+            }
+            ValidarErrores(result);
             return View(credentials);
 
         }
@@ -100,50 +101,47 @@ namespace ManejoDePresupuestos.Controllers
         {
             ViewData["ReturnUrl"] = ReturnUrl;
             ReturnUrl = ReturnUrl ?? Url.Content("~/");
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var result = await signInManager.PasswordSignInAsync(credentials.Email, credentials.Password, credentials.RememberMe,
+                return View(credentials);
+            }
+            var result = await signInManager.PasswordSignInAsync(credentials.Email, credentials.Password, credentials.RememberMe,
                                                                lockoutOnFailure: true);
-                var user = await userManager.FindByEmailAsync(credentials.Email);
-                if (user == null)
-                {
-                    ModelState.AddModelError(nameof(credentials.Email),"El usuario no es válido");
-                    return View(credentials);
-                }
-                var LockedOut = await userManager.IsLockedOutAsync(user);
-                if (LockedOut)
-                {
-                    ModelState.AddModelError(nameof(credentials.Email), "Cuenta bloqueda temporalmente. Intente más tarde");
-                    return View(credentials);
-                }
+            var user = await userManager.FindByEmailAsync(credentials.Email);
+            if (user == null)
+            {
+                ModelState.AddModelError(nameof(credentials.Email), "El usuario no es válido");
+                return View(credentials);
+            }
+            var LockedOut = await userManager.IsLockedOutAsync(user);
+            if (LockedOut)
+            {
+                ModelState.AddModelError(nameof(credentials.Email), "Cuenta bloqueda temporalmente. Intente más tarde");
+                return View(credentials);
+            }
 
-                if (result.Succeeded)
+            if (!result.Succeeded)
+            {
+                var FailedCount = await userManager.GetAccessFailedCountAsync(user);
+                if (FailedCount < 4)
                 {
-                    await signInManager.SignInAsync(user, isPersistent: credentials.RememberMe);
-                    return LocalRedirect(ReturnUrl);
+                    ModelState.AddModelError(nameof(credentials.Password), "Datos Incorrectos. Vuelva a intentarlo.");
+                    return View(credentials);
+                }
+                else if (FailedCount == 4)
+                {
+                    ModelState.AddModelError(nameof(credentials.Password), "Solo le queda un intento, si vuelve a fallar se bloqueará la cuenta temporalmente");
+                    return View(credentials);
                 }
                 else
                 {
-                    var FailedCount = await userManager.GetAccessFailedCountAsync(user);
-                    if (FailedCount < 4)
-                    {
-                        ModelState.AddModelError(nameof(credentials.Password), "Datos Incorrectos. Vuelva a intentarlo.");
-                        return View(credentials);
-                    }
-                    else if (FailedCount == 4)
-                    {
-                        ModelState.AddModelError(nameof(credentials.Password), "Solo le queda un intento, si vuelve a fallar se bloqueará la cuenta temporalmente");
-                        return View(credentials);
-                    }
-                    else
-                    {
-                        ModelState.AddModelError(nameof(credentials.Password), "Cuenta bloqueda temporalmente. Intente más tarde");
-                        return View(credentials);
-                    }
+                    ModelState.AddModelError(nameof(credentials.Password), "Cuenta bloqueda temporalmente. Intente más tarde");
+                    return View(credentials);
                 }
+                
             }
-            return View(credentials);
-
+            await signInManager.SignInAsync(user, isPersistent: credentials.RememberMe);
+            return LocalRedirect(ReturnUrl);
         }
 
         [HttpGet]
@@ -176,42 +174,43 @@ namespace ManejoDePresupuestos.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> CompletarPerfil(PutUsersDTO putUsersDTO)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var IdUser = await GetUserInfo.GetId();
-                var User = await userManager.FindByIdAsync(IdUser);
-
-                if (User == null)
-                {
-                    return View("ErrorGenerico");
-                }
-                //Si el DNI en la base de datos es diferente de  NULL entonces significa que el usuario ya había ingresado datos personales anteriormente
-                // Si el DNI es igual a NULL significa que es la primera vez rellenando los campos de datos personales
-                if (User.Dni != null)
-                {
-                    //Si es el mismo DNI entonces el usuario se actualiza sin problemas
-                    if (User.Dni == putUsersDTO.Dni)
-                    {
-                        User = mapper.Map(putUsersDTO, User);
-                        await context.SaveChangesAsync();
-                        return RedirectToAction("Index", "Home");
-                    }
-
-                    //Sino es el mismo entonces se busca en la base de datos para saber que no haya otro usuario con ese nuevo DNI
-                    var ExistsDNI = await userManager.Users.AnyAsync(x => x.Dni == putUsersDTO.Dni);
-                    if (ExistsDNI)
-                    {
-                        ModelState.AddModelError(nameof(putUsersDTO.Dni),"El DNI no es válido");
-                        return View(putUsersDTO);
-                    }
-                }
-                //Se insertan los campos que nos mandaron
-                User = mapper.Map(putUsersDTO, User);
-                await context.SaveChangesAsync();
-                return RedirectToAction("Index", "Home");
-
+                return View(putUsersDTO);
             }
-            return View(putUsersDTO);
+            var IdUser = await GetUserInfo.GetId();
+            var User = await userManager.FindByIdAsync(IdUser);
+
+            if (User == null)
+            {
+                return View("ErrorGenerico");
+            }
+            //Si el DNI en la base de datos es diferente de  NULL entonces significa que el usuario ya había ingresado datos personales anteriormente
+            // Si el DNI es igual a NULL significa que es la primera vez rellenando los campos de datos personales
+            if (User.Dni != null)
+            {
+                //Si es el mismo DNI entonces el usuario se actualiza sin problemas
+                if (User.Dni == putUsersDTO.Dni)
+                {
+                    User = mapper.Map(putUsersDTO, User);
+                    await context.SaveChangesAsync();
+                    return RedirectToAction("Index", "Home");
+                }
+
+                //Sino es el mismo entonces se busca en la base de datos para saber que no haya otro usuario con ese nuevo DNI
+                var ExistsDNI = await userManager.Users.AnyAsync(x => x.Dni == putUsersDTO.Dni);
+                if (ExistsDNI)
+                {
+                    ModelState.AddModelError(nameof(putUsersDTO.Dni), "El DNI no es válido");
+                    return View(putUsersDTO);
+                }
+            }
+            //Se insertan los campos que nos mandaron
+            User = mapper.Map(putUsersDTO, User);
+            await context.SaveChangesAsync();
+            return RedirectToAction("Index", "Home");
+
+            
 
         }
 
@@ -225,21 +224,22 @@ namespace ManejoDePresupuestos.Controllers
         [HttpPost]
         public async Task<ActionResult> OlvidoContraseña(ForgetPassword emailDTO)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var usuario = await userManager.FindByEmailAsync(emailDTO.Email);
-                if (usuario == null)
-                {
-                    return View("ErrorGenerico");
-                }
-
-                var codigo = await userManager.GeneratePasswordResetTokenAsync(usuario);
-                var urlRetorno = Url.Action("ResetearContraseña", "Registro", new { code = codigo }, protocol: HttpContext.Request.Scheme);
-
-                await servicioEmail.RecuperarContraseña(emailDTO.Email, urlRetorno);
-                return View("EnvioCorreoOlvidoContraseña", emailDTO.Email);
+                return View(emailDTO);
             }
-            return View(emailDTO);
+            var usuario = await userManager.FindByEmailAsync(emailDTO.Email);
+            if (usuario == null)
+            {
+                return View("ErrorGenerico");
+            }
+
+            var codigo = await userManager.GeneratePasswordResetTokenAsync(usuario);
+            var urlRetorno = Url.Action("ResetearContraseña", "Registro", new { code = codigo }, protocol: HttpContext.Request.Scheme);
+
+            await servicioEmail.RecuperarContraseña(emailDTO.Email, urlRetorno);
+            return View("EnvioCorreoOlvidoContraseña", emailDTO.Email);
+            
 
         }
         [AllowAnonymous]
@@ -256,21 +256,22 @@ namespace ManejoDePresupuestos.Controllers
 
         public async Task<ActionResult> ResetearContraseña(ResetPassword resetPassword)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var usuario = await userManager.FindByEmailAsync(resetPassword.Email);
-                if (usuario == null)
-                {
-                    return View("ErrorGenerico");
-                }
-
-                var resultado = await userManager.ResetPasswordAsync(usuario, resetPassword.Code, resetPassword.NewPassword);
-                if (resultado.Succeeded)
-                {
-                    return RedirectToAction("Index", "Home");
-                }
-                ValidarErrores(resultado);
+                return View(resetPassword);
             }
+            var usuario = await userManager.FindByEmailAsync(resetPassword.Email);
+            if (usuario == null)
+            {
+                return View("ErrorGenerico");
+            }
+
+            var resultado = await userManager.ResetPasswordAsync(usuario, resetPassword.Code, resetPassword.NewPassword);
+            if (resultado.Succeeded)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            ValidarErrores(resultado);
             return View(resetPassword);
         }
 
@@ -305,23 +306,24 @@ namespace ManejoDePresupuestos.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> CambiarContraseña(ChangePassword changePassword)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var IdUser = await GetUserInfo.GetId();
-                var usuario = await userManager.FindByIdAsync(IdUser);
-                if (usuario == null)
-                {
-                    return View("ErrorGenerico");
-                }
-
-                var resultado = await userManager.ChangePasswordAsync(usuario, changePassword.CurrentPassword, changePassword.NewPassword);
-
-                if (resultado.Succeeded)
-                {
-                    return RedirectToAction("Index","Home");
-                }
-                ValidarErrores(resultado);
+                return View(changePassword);
             }
+            var IdUser = await GetUserInfo.GetId();
+            var usuario = await userManager.FindByIdAsync(IdUser);
+            if (usuario == null)
+            {
+                return View("ErrorGenerico");
+            }
+
+            var resultado = await userManager.ChangePasswordAsync(usuario, changePassword.CurrentPassword, changePassword.NewPassword);
+
+            if (resultado.Succeeded)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            ValidarErrores(resultado);
             return View(changePassword);
         }
 
@@ -345,6 +347,5 @@ namespace ManejoDePresupuestos.Controllers
             }
             return Json(true);
         }
-
     }
 }

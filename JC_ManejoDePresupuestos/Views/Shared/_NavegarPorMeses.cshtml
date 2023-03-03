@@ -1,0 +1,8 @@
+﻿@model ReportesTransacciones
+<h4>
+    <a asp-action="Reporte" asp-controller="Cuentas" asp-route-month="@ViewBag.mesAnterior" asp-route-year="@ViewBag.añoAnterior"
+       class="btn btn-secondary"><i class="bi-chevron-left"></i></a>
+    @Model.FechaInicio.ToString("MMM").Replace(".","").ToUpper() - @Model.FechaInicio.Year
+    <a asp-action="Reporte" asp-controller="Cuentas" asp-route-month="@ViewBag.mesPosterior" asp-route-year="@ViewBag.añoPosterior"
+       class="btn btn-secondary"><i class="bi-chevron-right"></i></a>
+</h4>

@@ -1,0 +1,19 @@
+﻿@model ReportesTransacciones
+@{
+    //string ObtenerClaseBalance(decimal balance)
+    //{
+    //    return balance >= 0 ? "activo" : "pasivo";
+
+    //}
+    var ResumenMontos = new ResumenMontosViewModel()
+    {
+    Ingresos = Model.BalanceIngresos,
+    Gastos = Model.BalanceRetiros,
+    Total = Model.Total
+    };
+}
+<partial name="_NavegarPorMeses" model="@Model" />
+<h2 style="margin-left:20%" class="mb-5 mt-3">Este es el balance total de todas las transacciones del mes</h2>
+
+<partial name="_ResumenMontos" model="@ResumenMontos"/>
+<partial name="_MostrarTransaccionesAgrupadas" model="@Model"/>
