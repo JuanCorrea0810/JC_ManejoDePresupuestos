@@ -28,6 +28,8 @@ public partial class ApplicationDbContext : IdentityDbContext<NewIdentityUser>
 
     public virtual DbSet<Transaccion> Transacciones { get; set; }
     public virtual DbSet<TransaccionesSemanalesViewModel> TransaccionesPorSemana { get; set; }
+    public virtual DbSet<TransaccionesMensuales> TransaccionesPorMes { get; set; }
+
 
 
 
@@ -42,6 +44,8 @@ public partial class ApplicationDbContext : IdentityDbContext<NewIdentityUser>
             .HasColumnType("decimal(18,2)");
         
         modelBuilder.Entity<TransaccionesSemanalesViewModel>().HasNoKey();
+        modelBuilder.Entity<TransaccionesMensuales>().HasNoKey();
+
         base.OnModelCreating(modelBuilder);
     }
 

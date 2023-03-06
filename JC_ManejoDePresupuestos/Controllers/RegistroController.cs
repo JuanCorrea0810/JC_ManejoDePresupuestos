@@ -144,8 +144,8 @@ namespace ManejoDePresupuestos.Controllers
             return LocalRedirect(ReturnUrl);
         }
 
-        [HttpGet]
-
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> LogOut()
         {
             await signInManager.SignOutAsync();

@@ -8,6 +8,7 @@ namespace ManejoDePresupuestos.Servicios
 {
     public interface IServicioReporteTransacciones
     {
+        Task<IEnumerable<TransaccionesMensuales>> ObtenerTransaccionesPorMes(int year, string UsuarioId, dynamic ViewBag);
         Task<IEnumerable<TransaccionesSemanalesViewModel>> ObtenerTransaccionesPorSemana(int month, int year, string UsuarioId, dynamic ViewBag);
         Task<ReportesTransacciones> ReportePorCuentas(int month, int year, int Id, string UsuarioId, dynamic ViewBag);
         Task<ReportesTransacciones> ReportesTransacciones(int month, int year,string UsuarioId, dynamic ViewBag);
@@ -56,7 +57,27 @@ namespace ManejoDePresupuestos.Servicios
             var Transacciones = await repositorioTransacciones.ObtenerTransaccionesPorSemana(UsuarioId, FechaInicio, FechaFin);
             return Transacciones;
         }
-        
+        public async Task<IEnumerable<TransaccionesMensuales>> ObtenerTransaccionesPorMes(int year,string UsuarioId,dynamic ViewBag) 
+        {
+            int Year;
+            if (year <= 0 || year < 1900)
+            {
+
+                Year = DateTime.Today.Year;
+            }
+            else 
+            {
+               Year = year;
+            }
+            
+            var Fecha = new DateTime(Year, 1, 1);
+            ViewBag.añoAnterior = Fecha.AddYears(-1).Year;
+            ViewBag.añoPosterior = Fecha.AddYears(1).Year;
+            ViewBag.Year = Year;
+            var resultado = await repositorioTransacciones.ObtenerTransaccionesPorMes(UsuarioId, Year);
+            return resultado;
+        }
+
 
         private (DateTime FechaInicio, DateTime FechaFin) GenerarFechas(int month,int year) 
         {

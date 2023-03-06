@@ -9,24 +9,24 @@
     display: flow
 }
 
-    #CrearCuenta .form-group {
+#CrearCuenta .form-group {
         margin-bottom: 1em;
-    }
+}
 
-    #CrearCuenta label {
+#CrearCuenta label {
         font-weight: bold;
         display: block;
         margin-bottom: 0.5em;
-    }
+}
 
-    #CrearCuenta input[type="email"], #CrearCuenta input[type="password"] {
+#CrearCuenta input[type="email"], #CrearCuenta input[type="password"] {
         padding: 0.5em;
         border: 1px solid #ccc;
         border-radius: 0.25em;
         width: 100%;
-    }
+}
 
-    #CrearCuenta button[type="submit"] {
+#CrearCuenta button[type="submit"] {
         background: #E50914;
         color: #fff;
         padding: 0.5em 1em;
@@ -34,7 +34,7 @@
         border-radius: 0.25em;
         cursor: pointer;
         width: 100%
-    }
+}
 
 .ConfirmarEmail {
     text-align: center;
@@ -59,9 +59,9 @@
     margin-top: 50px;
 }
 
-    #ButtonConfirmEmail:hover {
+#ButtonConfirmEmail:hover {
         background-color: darkgreen;
-    }
+}
 
 .IniciarSesion {
     width: 400px;
@@ -72,12 +72,12 @@
     padding: 80px 30px;
 }
 
-    .IniciarSesion label {
+.IniciarSesion label {
         display: block;
         margin-bottom: 10px;
-    }
+}
 
-    .IniciarSesion input[type="email"], .IniciarSesion
+.IniciarSesion input[type="email"], .IniciarSesion
     input[type="password"] {
         width: 100%;
         padding: 12px 20px;
@@ -85,9 +85,9 @@
         box-sizing: border-box;
         border: 2px solid #ccc;
         border-radius: 4px;
-    }
+}
 
-    .IniciarSesion input[type="submit"] {
+.IniciarSesion input[type="submit"] {
         width: 100%;
         background-color: #4CAF50;
         color: white;
@@ -96,7 +96,7 @@
         border: none;
         border-radius: 4px;
         cursor: pointer;
-    }
+}
 
         .IniciarSesion input[type="submit"]:hover {
             background-color: #45a049;
@@ -111,12 +111,12 @@
     border-radius: 5px;
 }
 
-    #CompletarPerfil label {
+#CompletarPerfil label {
         width: 100%;
         display: block;
         margin-bottom: 10px;
         font-size: 18px;
-    }
+}
 
 #CompletarPerfil input[type="text"] {
     width: 100%;
@@ -176,5 +176,8 @@
 .acordeon-cuentas .accordion-collapse {
     font-size: 18px;
 }
+
+
+
 
 

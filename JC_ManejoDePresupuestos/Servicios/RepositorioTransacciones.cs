@@ -15,6 +15,7 @@ namespace ManejoDePresupuestos.Servicios
         Task<IEnumerable<TransaccionCreacionViewModel>> ObtenerListado(string UsuarioId, DateTime fechaInicio, DateTime fechaFin);
         Task<IEnumerable<TransaccionCreacionViewModel>> ObtenerPorCuentas(TransaccionesPorCuenta viewModel, string UsuarioId);
         Task<TransaccionCreacionViewModel> ObtenerPorId(int Id, string UsuarioId);
+        Task<IEnumerable<TransaccionesMensuales>> ObtenerTransaccionesPorMes(string UsuarioId, int Year);
         Task<IEnumerable<TransaccionesSemanalesViewModel>> ObtenerTransaccionesPorSemana(string UsuarioId, DateTime FechaInicio, DateTime FechaFin);
     }
     public class RepositorioTransacciones : IRepositorioTransacciones
@@ -106,6 +107,17 @@ namespace ManejoDePresupuestos.Servicios
             };
             var resultado = await context.TransaccionesPorSemana.FromSqlRaw("EXEC ReporteSemanal @UsuarioId,@FechaInicio,@FechaFin", parameters.ToArray()).
                 ToListAsync();
+            return resultado;
+        }
+        public async Task<IEnumerable<TransaccionesMensuales>> ObtenerTransaccionesPorMes(string UsuarioId, int Year) 
+        {
+            var parameters = new List<SqlParameter>()
+            {
+                 new SqlParameter("@UsuarioId", UsuarioId),
+                 new SqlParameter("@Year", Year),
+            };
+
+            var resultado = await context.TransaccionesPorMes.FromSqlRaw("EXEC ReporteMensual @UsuarioId,@Year", parameters.ToArray()).ToListAsync();
             return resultado;
         }
 

@@ -2,6 +2,6 @@
 {
     public enum SubMenuTransacciones
     {
-        Diario,Semanal,Mensual,Excel,Calendario
+        Diario,Semanal,Mensual,Excel
     }
 }

@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<NewIdentityUser> signInManager
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -20,21 +22,24 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Transacciones" asp-action="Index">Transacciones</a>
-                        </li>   
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="TipoCuentas" asp-action="Index">Tipo Cuentas</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Categorias" asp-action="Index">Categorias</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Cuentas" asp-action="Index">Cuentas</a>
-                        </li>
-
-                    </ul>
+                    @if (signInManager.IsSignedIn(User))
+                    {
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Cuentas" asp-action="Index">Cuentas</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Transacciones" asp-action="Index">Transacciones</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="TipoCuentas" asp-action="Index">Tipo Cuentas</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Categorias" asp-action="Index">Categorias</a>
+                            </li>
+                        </ul>
+                    } 
+                    <partial name="_ManejoDeUsuarios"/>
                 </div>
             </div>
         </nav>

@@ -1,4 +1,54 @@
-﻿@{
+﻿@model ReporteTransaccionesPorMes
+@{
     ViewData["Title"] = "Reporte Mensual";
+    var ResumenMontos = new ResumenMontosViewModel()
+    {
+        Ingresos = Model.IngresosAnuales,
+        Gastos = Model.GastosAnuales,
+        Total = Model.TotalAnual
+    };
 }
 <partial name="_SubMenu" model="SubMenuTransacciones.Mensual" />
+<h4>
+    <a asp-action="Mensual"asp-controller="Transacciones" asp-route-year="@ViewBag.añoAnterior" class="btn btn-secondary">
+        <i class="bi-chevron-left"></i>
+    </a> @ViewBag.Year
+    <a asp-action="Mensual" asp-controller="Transacciones" asp-route-year="@ViewBag.añoPosterior" class="btn btn-secondary">
+        <i class="bi-chevron-right"></i>
+    </a>
+</h4>
+<h2 style="margin-left:40%">
+    Balance del año
+</h2>
+<br/>
+<partial name="_ResumenMontos" model="@ResumenMontos" />
+<br />
+<h2 style="margin-left:38%">
+    Balance por Meses
+</h2>
+<br />
+<table class="table" style="font-size: 20px">
+    <thead>
+        <tr style="background-color: lightblue">
+            <th>Mes</th>
+            <th style="text-align: right">Ingresos</th>
+            <th style="text-align: right">Gastos</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var transaccionPorMes in Model.TransaccionesAgrupadas)
+        {
+            <tr>
+                <td>
+                    <a style="text-decoration: none;" asp-action="Index" asp-controller="Transacciones"
+                   asp-route-year="@ViewBag.Year" asp-route-month="@transaccionPorMes.Mes">
+                        @transaccionPorMes.Fecha.ToString("MMM").ToUpper().Replace(".","")
+                    </a>
+                </td>
+                <td class="activo" style="text-align: right">@transaccionPorMes.IngresosMensuales.ToString("N")</td>
+                <td class="pasivo" style="text-align: right">@transaccionPorMes.GastosMensuales.ToString("N")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+

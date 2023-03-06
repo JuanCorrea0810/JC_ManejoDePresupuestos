@@ -5109,12 +5109,12 @@ namespace ElasticEmailClient
         public string TemplateReplyName { get; set; }
 
         /// <summary>
-        /// Total emails clicked
+        /// TotalMensual emails clicked
         /// </summary>
         public int ClickedCount { get; set; }
 
         /// <summary>
-        /// Total emails opened.
+        /// TotalMensual emails opened.
         /// </summary>
         public int OpenedCount { get; set; }
 
@@ -5124,17 +5124,17 @@ namespace ElasticEmailClient
         public int RecipientCount { get; set; }
 
         /// <summary>
-        /// Total emails sent.
+        /// TotalMensual emails sent.
         /// </summary>
         public int SentCount { get; set; }
 
         /// <summary>
-        /// Total emails failed.
+        /// TotalMensual emails failed.
         /// </summary>
         public int FailedCount { get; set; }
 
         /// <summary>
-        /// Total emails unsubscribed
+        /// TotalMensual emails unsubscribed
         /// </summary>
         public int UnsubscribedCount { get; set; }
 
@@ -5587,22 +5587,22 @@ namespace ElasticEmailClient
         public string BouncedErrorMessage { get; set; }
 
         /// <summary>
-        /// Total emails sent.
+        /// TotalMensual emails sent.
         /// </summary>
         public int TotalSent { get; set; }
 
         /// <summary>
-        /// Total emails failed.
+        /// TotalMensual emails failed.
         /// </summary>
         public int TotalFailed { get; set; }
 
         /// <summary>
-        /// Total emails opened.
+        /// TotalMensual emails opened.
         /// </summary>
         public int TotalOpened { get; set; }
 
         /// <summary>
-        /// Total emails clicked
+        /// TotalMensual emails clicked
         /// </summary>
         public int TotalClicked { get; set; }
 
@@ -6237,7 +6237,7 @@ namespace ElasticEmailClient
         public List<ApiTypes.EmailJobFailedStatus> Failed { get; set; }
 
         /// <summary>
-        /// Total emails failed.
+        /// TotalMensual emails failed.
         /// </summary>
         public int FailedCount { get; set; }
 
@@ -6247,7 +6247,7 @@ namespace ElasticEmailClient
         public List<string> Sent { get; set; }
 
         /// <summary>
-        /// Total emails sent.
+        /// TotalMensual emails sent.
         /// </summary>
         public int SentCount { get; set; }
 
@@ -6277,7 +6277,7 @@ namespace ElasticEmailClient
         public List<string> Opened { get; set; }
 
         /// <summary>
-        /// Total emails opened.
+        /// TotalMensual emails opened.
         /// </summary>
         public int OpenedCount { get; set; }
 
@@ -6287,7 +6287,7 @@ namespace ElasticEmailClient
         public List<string> Clicked { get; set; }
 
         /// <summary>
-        /// Total emails clicked
+        /// TotalMensual emails clicked
         /// </summary>
         public int ClickedCount { get; set; }
 
@@ -6297,7 +6297,7 @@ namespace ElasticEmailClient
         public List<string> Unsubscribed { get; set; }
 
         /// <summary>
-        /// Total emails unsubscribed
+        /// TotalMensual emails unsubscribed
         /// </summary>
         public int UnsubscribedCount { get; set; }
 
@@ -7874,7 +7874,7 @@ namespace ElasticEmailClient
     public class SpamCheck
     {
         /// <summary>
-        /// Total spam score from
+        /// TotalMensual spam score from
         /// </summary>
         public string TotalScore { get; set; }
 
@@ -8286,7 +8286,7 @@ namespace ElasticEmailClient
         public List<ApiTypes.Template> Templates { get; set; }
 
         /// <summary>
-        /// Total of templates
+        /// TotalMensual of templates
         /// </summary>
         public int TemplatesCount { get; set; }
 
@@ -8296,7 +8296,7 @@ namespace ElasticEmailClient
         public List<ApiTypes.Template> DraftTemplate { get; set; }
 
         /// <summary>
-        /// Total of draft templates
+        /// TotalMensual of draft templates
         /// </summary>
         public int DraftTemplatesCount { get; set; }
 

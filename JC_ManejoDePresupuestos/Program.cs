@@ -27,6 +27,7 @@ public class Program
 
         var builder = WebApplication.CreateBuilder(args);
         // Add services to the container.
+        
         builder.Services.AddControllersWithViews();
         builder.Services.AddControllers().AddNewtonsoftJson().
                         AddJsonOptions(options =>
@@ -40,7 +41,8 @@ public class Program
 
         builder.Services.AddIdentity<NewIdentityUser, IdentityRole>()
               .AddEntityFrameworkStores<ApplicationDbContext>()
-              .AddDefaultTokenProviders();
+              .AddDefaultTokenProviders()
+              .AddErrorDescriber<MensajesDeErrorIdentity>();
 
         builder.Services.Configure<IdentityOptions>(options =>
         {
@@ -52,8 +54,8 @@ public class Program
             options.Lockout.MaxFailedAccessAttempts = 5;
             options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
         });
+       
         builder.Services.AddAutoMapper(typeof(Program));
-
         builder.Services.AddScoped<IRepositorioTipoCuentas, RepositorioTipoCuentas>();
         builder.Services.AddScoped<IRepositorioCuentas, RepositorioCuentas>();
         builder.Services.AddScoped<IRepositorioCategorias,RepositorioCategorias>();
@@ -62,6 +64,7 @@ public class Program
         builder.Services.AddTransient<IServicioEmail, ServicioEmailElasticEmail>();
         builder.Services.AddTransient<IServicioReporteTransacciones, ServicioReporteTransacciones>();
         builder.Services.AddHttpContextAccessor();
+        builder.Services.AddTransient<SignInManager<NewIdentityUser>>();
 
 
 
