@@ -4,11 +4,17 @@
     @if (siginManager.IsSignedIn(User))
     {
         <li class="nav-item">
-            <span class="nav-link text-dark">Hola, @User.Identity.Name</span>
-        </li>
+            <div class="dropdown">
+                <button class="dropdown-btn">Cuenta</button>
+                <div class="dropdown-content">
+                    <a class="Sombrear" asp-action="CompletarPerfil" asp-controller="Registro">Completar Perfil</a>
+                    <a class="Sombrear" asp-action="CambiarContraseña" asp-controller="Registro">Cambiar Contraseña</a>
+                </div>
+            </div>
+        </li>        
         <li class="nav-item">
             <form class="form-inline" asp-action="LogOut" asp-controller="Registro">
-                <button type="submit" class="nav-link btn btn-link text-dark">
+                <button type="submit" class="nav-link btn btn-link text-dark Sombrear" style="margin-top:7%">
                     Cerrar Sesión
                 </button>
             </form>

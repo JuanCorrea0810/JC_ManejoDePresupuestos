@@ -11,18 +11,18 @@ namespace ManejoDePresupuestos.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-       
+        private readonly SignInManager<NewIdentityUser> signInManager;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger,SignInManager<NewIdentityUser> signInManager)
         {
             _logger = logger;
-           
+            this.signInManager = signInManager;
         }
 
         public IActionResult Index()
         {
-           
-            return  RedirectToAction("LogIn", "Registro");
+            
+            return (signInManager.IsSignedIn(HttpContext.User))? RedirectToAction("Index","Cuentas"): RedirectToAction("LogIn", "Registro");
         }
 
         public IActionResult Privacy()

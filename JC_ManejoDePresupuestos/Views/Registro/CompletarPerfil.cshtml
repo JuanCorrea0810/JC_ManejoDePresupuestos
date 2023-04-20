@@ -6,6 +6,7 @@
     ViewData["Title"] = "Completar perfil";
     var ListadoDePaises = Countries.ListCountries;
     string paisesJson = JsonSerializer.Serialize(ListadoDePaises);
+    bool PaisExiste = false;
 }
 
 
@@ -45,13 +46,18 @@
     <div class="form-group">
         <label asp-for="Country"></label>
         <select id="pais-select" class="form-control" asp-for="Country"> 
-            @if (Model.Country.Length == 0)
+         
+            @foreach (var country in ListadoDePaises)
+            {
+                if (Model.Country == country)
+                {
+                    <option value="@country" selected>@country</option>
+                    PaisExiste = true;
+                }                
+            }
+            @if (!PaisExiste)
             {
                 <option value="" selected></option>
-                
-            }else
-            {
-                <option value="@Model.Country" selected></option>
             }
         </select>
         <span asp-validation-for="Country" class="text-danger"></span>

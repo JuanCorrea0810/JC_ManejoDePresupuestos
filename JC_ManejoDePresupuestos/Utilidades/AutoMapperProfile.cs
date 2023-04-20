@@ -23,7 +23,7 @@ namespace ManejoDePresupuestos.Utilidades
             CreateMap<TransaccionCreacionViewModel,ActualizarTransaccionViewModel>().ForMember(x=> x.CuentaAnteriorId,z=>z.MapFrom(o=> o.CuentaId))
                                                                                     .ForMember(x=> x.MontoAnterior, z=>z.MapFrom(o=> o.Monto));
             CreateMap<ActualizarTransaccionViewModel, Transaccion>();
-       
+
 
         }
     }

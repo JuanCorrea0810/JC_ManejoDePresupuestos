@@ -46,7 +46,7 @@ namespace ManejoDePresupuestos.Controllers
         [HttpGet]
         public ActionResult Sign_Up()
         {
-            
+
             return View();
         }
 
@@ -55,7 +55,7 @@ namespace ManejoDePresupuestos.Controllers
         [HttpPost]
         public async Task<ActionResult> Sign_Up(InfoUser credentials)
         {
-            
+
             if (!ModelState.IsValid)
             {
                 return View(credentials);
@@ -138,7 +138,7 @@ namespace ManejoDePresupuestos.Controllers
                     ModelState.AddModelError(nameof(credentials.Password), "Cuenta bloqueda temporalmente. Intente más tarde");
                     return View(credentials);
                 }
-                
+
             }
             await signInManager.SignInAsync(user, isPersistent: credentials.RememberMe);
             return LocalRedirect(ReturnUrl);
@@ -198,20 +198,32 @@ namespace ManejoDePresupuestos.Controllers
                 }
 
                 //Sino es el mismo entonces se busca en la base de datos para saber que no haya otro usuario con ese nuevo DNI
-                var ExistsDNI = await userManager.Users.AnyAsync(x => x.Dni == putUsersDTO.Dni);
-                if (ExistsDNI)
+                bool DniYaExisteCuandoUsuarioViejoLlenaDatos = await YaExisteDNIEnBaseDeDatos(putUsersDTO);
+                if (DniYaExisteCuandoUsuarioViejoLlenaDatos)
                 {
-                    ModelState.AddModelError(nameof(putUsersDTO.Dni), "El DNI no es válido");
                     return View(putUsersDTO);
                 }
+            }
+            //Así sea la primera vez que se completa los datos del perfil, se debe buscar en la base de datos que no exista otro usuario con el mismo DNI
+            bool DniYaExisteCuandoUsuarioNuevoLlenaDatos = await YaExisteDNIEnBaseDeDatos(putUsersDTO);
+            if (DniYaExisteCuandoUsuarioNuevoLlenaDatos)
+            {
+                return View(putUsersDTO);
             }
             //Se insertan los campos que nos mandaron
             User = mapper.Map(putUsersDTO, User);
             await context.SaveChangesAsync();
             return RedirectToAction("Index", "Home");
-
-            
-
+        }
+        private async Task<bool> YaExisteDNIEnBaseDeDatos(PutUsersDTO putUsersDTO)
+        {
+            var ExistsDNI = await userManager.Users.AnyAsync(x => x.Dni == putUsersDTO.Dni);
+            if (ExistsDNI)
+            {
+                ModelState.AddModelError(nameof(putUsersDTO.Dni), "El DNI no es válido");
+                return true;
+            }
+            return false;
         }
 
         [AllowAnonymous]
@@ -239,7 +251,7 @@ namespace ManejoDePresupuestos.Controllers
 
             await servicioEmail.RecuperarContraseña(emailDTO.Email, urlRetorno);
             return View("EnvioCorreoOlvidoContraseña", emailDTO.Email);
-            
+
 
         }
         [AllowAnonymous]
@@ -338,10 +350,10 @@ namespace ManejoDePresupuestos.Controllers
         [AllowAnonymous]
         //Método que sirve para validar de manera remota desde el cliente si el usuario ya existe, se debe utilizar AllowAnonymous para que funcione
         //JavaScript hace una petición HTTPGET a esta ruta antes de entrar a la acción de Sign_Up
-        public async Task<IActionResult> CorreoYaExiste(string Email) 
+        public async Task<IActionResult> CorreoYaExiste(string Email)
         {
             var ExisteUsuario = await userManager.FindByEmailAsync(Email);
-            if (ExisteUsuario != null )
+            if (ExisteUsuario != null)
             {
                 return Json("Ya existe un usuario con este nombre");
             }

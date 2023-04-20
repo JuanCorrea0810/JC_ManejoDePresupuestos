@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ManejoDePresupuestos.Models
 {
+    [NotMapped]
     public class TransaccionesMensuales
     {
         private int mes;
